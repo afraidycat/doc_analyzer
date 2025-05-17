@@ -1,0 +1,78 @@
+Upload Exchange Fee Schedule (PDF),output,timestamp
+.gradio/flagged/Upload Exchange Fee Schedule PDF/2644bac85b44ae1ca13c/NASDAQ_PHLX_Exchange_Fees.pdf,,2025-05-17 16:52:28.179802
+.gradio/flagged/Upload Exchange Fee Schedule PDF/f466a87bca3150ee56ee/NASDAQ_PHLX_Exchange_Fees.pdf,"📊 **Fee Scenario Variations**
+
+
+🧾 **Customer - Customer Rebate Program - Category A**
+- Tier: Tier 3
+- Fee: $0.00
+- Rebate: $0.15 per contract
+- Notes: A Customer executing electronically-delivered Simple Orders in Penny Symbols that fall within Tier 3 of the Customer Rebate Program will not incur fees but will receive a rebate of $0.15 per contract.
+
+
+🧾 **Market Maker - Electronic Penny Options Transaction Charge**
+- Tier: N/A
+- Fee: $0.22 per contract
+- Rebate: $0.00
+- Notes: A Market Maker executing electronically-delivered transactions in Penny Symbols will be charged $0.22 per contract as per the Options Transaction Charge in the relevant category.
+
+
+🧾 **Lead Market Maker - SPY Rebate for Adding Liquidity**
+- Tier: Tier 5
+- Fee: $0.00
+- Rebate: $0.34 per contract
+- Notes: A Lead Market Maker adding liquidity in SPY, achieving the highest tier by adding liquidity as a percentage above 0.40% of TCV, will receive a rebate of $0.34 per contract.
+
+
+🧾 **Professional - Complex Order in Non-Penny Symbols**
+- Tier: N/A
+- Fee: $0.75 per contract
+- Rebate: $0.00
+- Notes: A Professional executing Complex Orders in Non-Penny Symbols is charged $0.75 per contract according to the Non-Penny Options Transaction Charges.
+
+
+🧾 **Broker-Dealer - QCC Transaction**
+- Tier: Over 750,000 QCC contracts
+- Fee: $0.20 per contract
+- Rebate: $0.27 per contract
+- Notes: A Broker-Dealer exceeding 750,000 QCC contracts in a month is eligible for a rebate of $0.27 per contract, while being charged $0.20 per contract for each Qualifying QCC Transaction.
+
+",2025-05-17 16:52:57.866522
+.gradio/flagged/Upload Exchange Fee Schedule PDF/962ff0471234ae8c3023/NASDAQ_PHLX_Exchange_Fees.pdf,"📊 **Fee Scenario Variations**
+
+
+🧾 **Customer - Customer Rebate Program - Category A**
+- Tier: Tier 3
+- Fee: $0.00
+- Rebate: $0.15 per contract
+- Notes: A Customer executing electronically-delivered Simple Orders in Penny Symbols that fall within Tier 3 of the Customer Rebate Program will not incur fees but will receive a rebate of $0.15 per contract.
+
+
+🧾 **Market Maker - Electronic Penny Options Transaction Charge**
+- Tier: N/A
+- Fee: $0.22 per contract
+- Rebate: $0.00
+- Notes: A Market Maker executing electronically-delivered transactions in Penny Symbols will be charged $0.22 per contract as per the Options Transaction Charge in the relevant category.
+
+
+🧾 **Lead Market Maker - SPY Rebate for Adding Liquidity**
+- Tier: Tier 5
+- Fee: $0.00
+- Rebate: $0.34 per contract
+- Notes: A Lead Market Maker adding liquidity in SPY, achieving the highest tier by adding liquidity as a percentage above 0.40% of TCV, will receive a rebate of $0.34 per contract.
+
+
+🧾 **Professional - Complex Order in Non-Penny Symbols**
+- Tier: N/A
+- Fee: $0.75 per contract
+- Rebate: $0.00
+- Notes: A Professional executing Complex Orders in Non-Penny Symbols is charged $0.75 per contract according to the Non-Penny Options Transaction Charges.
+
+
+🧾 **Broker-Dealer - QCC Transaction**
+- Tier: Over 750,000 QCC contracts
+- Fee: $0.20 per contract
+- Rebate: $0.27 per contract
+- Notes: A Broker-Dealer exceeding 750,000 QCC contracts in a month is eligible for a rebate of $0.27 per contract, while being charged $0.20 per contract for each Qualifying QCC Transaction.
+
+",2025-05-17 16:52:59.887650
