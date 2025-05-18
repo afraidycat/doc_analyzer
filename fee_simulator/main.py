@@ -1,17 +1,20 @@
 from pydantic import BaseModel
 from typing import List
 from pypdf import PdfReader
-import openai
-import gradio as gr
 import json
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+import gradio as gr
 
-# Load .env from shared root
+# Load environment variables
 load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
-# 1️⃣ Pydantic schema for fee scenario output
+# API Keys
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+
+# 1️⃣ Output Schema
 class FeeScenario(BaseModel):
     participant_type: str
     volume_tier: str
@@ -23,7 +26,7 @@ class FeeScenario(BaseModel):
 class FeeScenarioAnalysis(BaseModel):
     scenarios: List[FeeScenario]
 
-# 2️⃣ Prompt generator for fee scenario logic
+# 2️⃣ Prompt Builder
 def build_prompt(doc_text: str) -> str:
     return f"""
 You are a financial pricing analyst AI. Given the exchange fee schedule below:
@@ -32,7 +35,7 @@ You are a financial pricing analyst AI. Given the exchange fee schedule below:
 2. Generate 3–5 realistic example scenarios showing estimated fees and rebates
 3. Provide short notes explaining how each result was derived
 
-Return your response in this JSON format:
+Return ONLY your response in this exact JSON format (no explanation, no Markdown):
 {{
   "scenarios": [
     {{
@@ -52,7 +55,7 @@ Document:
 ---
 """
 
-# 3️⃣ PDF text extractor
+# 3️⃣ PDF Reader
 def extract_text_from_pdf(pdf_file) -> str:
     reader = PdfReader(pdf_file)
     full_text = ""
@@ -61,38 +64,79 @@ def extract_text_from_pdf(pdf_file) -> str:
             full_text += page.extract_text() + "\n"
     return full_text.strip()
 
-# 4️⃣ LLM call + JSON parsing
-def analyze_document(doc_text: str) -> FeeScenarioAnalysis:
+# 4️⃣ LLM Runner
+def run_llm(prompt: str, provider: str = "openai") -> str:
+    if provider == "openai":
+        import openai
+        openai.api_key = OPENAI_API_KEY
+        response = openai.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are a financial fee analyst AI."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        return response.choices[0].message.content.strip()
+
+    elif provider == "anthropic":
+        import anthropic
+        client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+        response = client.messages.create(
+            model="claude-3-haiku-20240307",
+            max_tokens=1000,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        raw = response.content[0].text.strip()
+        print("🔍 Claude raw output:\n", raw[:300])
+        return raw
+
+    else:
+        raise ValueError(f"Unsupported provider: {provider}")
+
+# 5️⃣ Agent Logic
+def analyze_document(doc_text: str, provider: str = "openai") -> FeeScenarioAnalysis:
     prompt = build_prompt(doc_text)
-    response = openai.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {"role": "system", "content": "You are a financial fee analyst AI."},
-            {"role": "user", "content": prompt}
-        ]
-    )
-    content = response.choices[0].message.content.strip()
+    try:
+        content = run_llm(prompt, provider=provider)
 
-    if content.startswith("```json"):
-        content = content[7:]
-    if content.startswith("```"):
-        content = content[3:]
-    if content.endswith("```"):
-        content = content[:-3]
-    content = content.strip()
+        if content.startswith("```json"):
+            content = content[7:]
+        if content.startswith("```"):
+            content = content[3:]
+        if content.endswith("```"):
+            content = content[:-3]
+        content = content.strip()
 
-    parsed = json.loads(content)
-    return FeeScenarioAnalysis(**parsed)
+        parsed = json.loads(content)
+        return FeeScenarioAnalysis(**parsed)
 
-# 5️⃣ Gradio app logic
-def process_document(file):
+    except Exception as e:
+        if provider == "anthropic":
+            print("⚠️ Claude failed. Retrying with OpenAI...")
+            content = run_llm(prompt, provider="openai")
+            if content.startswith("```json"):
+                content = content[7:]
+            if content.startswith("```"):
+                content = content[3:]
+            if content.endswith("```"):
+                content = content[:-3]
+            content = content.strip()
+
+            print("🔁 Retry content preview:\n", content[:300])
+            parsed = json.loads(content)
+            return FeeScenarioAnalysis(**parsed)
+        else:
+            raise e
+
+# 6️⃣ Orchestrator
+def process_document(file, provider="openai"):
     text = extract_text_from_pdf(file)
-    result = analyze_document(text)
+    result = analyze_document(text, provider=provider)
 
-    output = "📊 **Fee Scenario Variations**\n\n"
+    output = "\U0001F4CA **Fee Scenario Variations**\n\n"
     for scenario in result.scenarios:
         output += f"""
-🧾 **{scenario.participant_type} - {scenario.order_type}**
+\U0001F9BE **{scenario.participant_type} - {scenario.order_type}**
 - Tier: {scenario.volume_tier}
 - Fee: {scenario.estimated_fee}
 - Rebate: {scenario.rebate}
@@ -101,12 +145,16 @@ def process_document(file):
 """
     return output
 
-# 6️⃣ Launch the app
+# 7️⃣ UI Launcher
 if __name__ == "__main__":
+    print("✅ Multi-LLM Fee Simulator launching...")
     gr.Interface(
-        fn=process_document,
-        inputs=gr.File(label="Upload Exchange Fee Schedule (PDF)"),
+        fn=lambda file, provider: process_document(file, provider),
+        inputs=[
+            gr.File(label="Upload Exchange Fee Schedule (PDF)"),
+            gr.Radio(["openai", "anthropic"], label="Choose LLM Provider", value="openai")
+        ],
         outputs="text",
-        title="Fee Simulator Agent",
-        description="Upload a document and receive 3–5 estimated fee and rebate scenarios."
+        title="Multi-LLM Fee Simulator",
+        description="Upload a fee schedule PDF and simulate 3–5 realistic fee/rebate scenarios using GPT-4o or Claude 3."
     ).launch()
