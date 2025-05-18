@@ -1,13 +1,18 @@
-# Document Analysis Tool
+# Multi-Agent Document Analysis System
 
-A tool that analyzes documents using AI to provide structured summaries, key topics, risks, and recommended actions.
+A system of AI agents that work together to analyze documents and simulate fee structures. The system includes:
 
-## Features
+## Components
 
+### Document Analysis Agent
 - PDF document analysis
 - Structured output with summaries, key topics, risks, and actions
 - Quality evaluation with automatic retry on subpar results
 - Simple web interface using Gradio
+
+### Fee Simulator Agent
+- Fee structure analysis and simulation
+- Integration with document analysis for comprehensive evaluation
 
 ## Setup
 
@@ -24,21 +29,30 @@ A tool that analyzes documents using AI to provide structured summaries, key top
 
 ## Usage
 
-Run the application:
+### Document Analysis
+Run the document analysis interface:
 ```bash
 python -m single_doc_analyze.main
 ```
 
-Then open your browser to the URL shown in the terminal (typically http://localhost:7860).
+### Fee Simulation
+Run the fee simulator:
+```bash
+python -m fee_simulator.main
+```
 
 ## Project Structure
 
-- `main.py`: Entry point and Gradio interface
-- `services/`: Core analysis and evaluation services
-- `models/`: Pydantic models for data validation
-- `utils/`: Utility functions
-- `prompts/`: Prompt templates
-- `config.py`: Configuration settings
+- `single_doc_analyze/`: Document analysis agent
+  - `main.py`: Entry point and Gradio interface
+  - `services/`: Core analysis and evaluation services
+  - `models/`: Pydantic models for data validation
+  - `utils/`: Utility functions
+  - `prompts/`: Prompt templates
+  - `config.py`: Configuration settings
+
+- `fee_simulator/`: Fee simulation agent
+  - `main.py`: Fee simulation interface and logic
 
 ## Error Handling
 
@@ -47,5 +61,18 @@ The application includes comprehensive error handling for:
 - API communication issues
 - JSON parsing errors
 - Invalid responses
+- Fee calculation errors
 
-All errors are logged and presented to the user in a friendly format. 
+All errors are logged and presented to the user in a friendly format.
+
+## Testing
+
+Run the test suite:
+```bash
+pytest
+```
+
+The test suite includes:
+- Unit tests for document analysis
+- Unit tests for fee simulation
+- Integration tests for agent interaction 
