@@ -1,0 +1,18 @@
+Sample Document for Testing
+
+This is a test document that contains various elements to analyze.
+
+Key Points:
+1. This is a test document
+2. It contains multiple paragraphs
+3. It has a clear structure
+
+Potential Issues:
+- The document is very short
+- It lacks real content
+- It's only for testing purposes
+
+Recommendations:
+1. Use a real document for actual analysis
+2. Include more complex content
+3. Test with various document types 
